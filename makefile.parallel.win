@@ -1,0 +1,98 @@
+#===== Build Directories =====================================
+#===== Base Simulator =====================================
+{$(BASE_DIR)}.cpp{$(BASE_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(BASE_DIR)/
+
+{$(BSDTCP_DIR)}.cpp{$(BSDTCP_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(BSDTCP_DIR)/
+
+{$(BSDTCP_DIR)/netinet}.cpp{$(BSDTCP_DIR)/netinet}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(BSDTCP_DIR)/netinet/
+
+{$(BSDTCP_DIR)/netinet/cc}.cpp{$(BSDTCP_DIR)/netinet/cc}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(BSDTCP_DIR)/netinet/cc/
+
+{$(BSDTCP_DIR)/kern}.cpp{$(BSDTCP_DIR)/kern}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(BSDTCP_DIR)/kern/
+
+{$(BSDTCP_DIR)/netinet/khelp}.cpp{$(BSDTCP_DIR)/netinet/khelp}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(BSDTCP_DIR)/netinet/khelp/
+
+{$(NRLOLSR_DIR)/protolib/common/}.cpp{$(NRLOLSR_DIR)/protolib/common/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(NRLOLSR_DIR)/protolib/common/
+
+{$(NRLOLSR_DIR)/common/}.cpp{$(NRLOLSR_DIR)/common/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(NRLOLSR_DIR)/common/
+
+{$(KERNELAODV_DIR)}.cpp{$(KERNELAODV_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(KERNELAODV_DIR)/
+
+{$(NUOLSRV2_DIR)/core/}.c{$(NUOLSRV2_DIR)/core/}.obj::
+    $(CXX) /TP -c $(OPTS) $(INCLUDES) $< /Fo$(NUOLSRV2_DIR)/core/
+
+{$(NUOLSRV2_DIR)/packet/}.c{$(NUOLSRV2_DIR)/packet/}.obj::
+    $(CXX) /TP -c $(OPTS) $(INCLUDES) $< /Fo$(NUOLSRV2_DIR)/packet/
+
+{$(NUOLSRV2_DIR)/olsrv2/}.c{$(NUOLSRV2_DIR)/olsrv2/}.obj::
+    $(CXX) /TP -c $(OPTS) $(INCLUDES) $< /Fo$(NUOLSRV2_DIR)/olsrv2/
+
+{$(ALOHA_DIR)}.cpp{$(ALOHA_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ALOHA_DIR)/
+
+{$(ITM_DIR)}.cpp{$(ITM_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ITM_DIR)/
+
+{$(ISCDHCP_DIR)}.cpp{$(ISCDHCP_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ISCDHCP_DIR)/
+
+{$(ISCDHCP_DIR)/omapip/}.cpp{$(ISCDHCP_DIR)/omapip/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ISCDHCP_DIR)/omapip/
+
+{$(ISCDHCP_DIR)/common/}.cpp{$(ISCDHCP_DIR)/common/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ISCDHCP_DIR)/common/
+
+{$(ISCDHCP_DIR)/client/}.cpp{$(ISCDHCP_DIR)/client/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ISCDHCP_DIR)/client/
+
+{$(ISCDHCP_DIR)/isc/}.cpp{$(ISCDHCP_DIR)/isc/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ISCDHCP_DIR)/isc/
+
+{$(ISCDHCP_DIR)/server/}.cpp{$(ISCDHCP_DIR)/server/}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ISCDHCP_DIR)/server/
+
+{$(MULTI_SYSTEMS_SIM_DIR)}.cpp{$(MULTI_SYSTEMS_SIM_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(MULTI_SYSTEMS_SIM_DIR)/
+
+#===== Dot11 Module =====================================
+{$(DOT11_DIR)}.cpp{$(DOT11_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(DOT11_DIR)/
+
+#===== Dot15BAN Module =====================================
+{$(DOT15BAN_DIR)}.cpp{$(DOT15BAN_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(DOT15BAN_DIR)/
+
+#===== ITS Extension Module =====================================
+{$(ITSSIM_DIR)}.cpp{$(ITSSIM_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(ITSSIM_DIR)/
+
+{$(MATES_DIR)/src}.cpp{$(MATES_DIR)/src}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(MATES_DIR)/src/
+
+{$(DOT11_DIR)/its_version}.cpp{$(DOT11_DIR)/its_version}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(DOT11_DIR)/its_version/
+
+#===== LTE Module =====================================
+{$(LTE_DIR)}.cpp{$(LTE_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(LTE_DIR)/
+
+#===== Multi-Agent Extension Module =====================================
+{$(MULTIAGENT_DIR)}.cpp{$(MULTIAGENT_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(MULTIAGENT_DIR)/
+
+#===== Trace Analyzer =====================================
+{$(TRACE_ANALYZER_DIR)}.cpp{$(TRACE_ANALYZER_DIR)}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$(TRACE_ANALYZER_DIR)/
+
+#===== General =====================================
+{}.cpp{}.obj::
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo./

@@ -1,0 +1,200 @@
+#===== Architecture Options =====================================
+
+BOOST_VER = 1_55
+COMPILE_ENV = :: Visual Studio
+SSL_VER=1_0_1m
+
+
+!IF "$(_NMAKE_VER)"=="12.00.21005.1"
+VC_VER = 120
+COMPILE_ENV = $(COMPILE_ENV) 2013
+BOOST_OPTS = -DBOOST_HAS_TR1_SHARED_PTR -DBOOST_HAS_TR1_ARRAY
+OPTS = $(OPTS) -DVC_120
+!ELSE
+VC_VER = 100
+COMPILE_ENV = $(COMPILE_ENV) 2010
+!ENDIF
+
+OBJLIBS_DIR=objlibs
+
+!IF "$(PLATFORM)"=="X64" || "$(PLATFORM)"=="x64"
+OBJLIBS_DIR = $(OBJLIBS_DIR)/win64
+COMPILE_ENV = $(COMPILE_ENV) (x64)
+DIGITS=64
+!ELSE
+OBJLIBS_DIR = $(OBJLIBS_DIR)/win
+COMPILE_ENV = $(COMPILE_ENV) (x86)
+DIGITS=
+!ENDIF
+
+!message
+!message $(COMPILE_ENV)
+!message
+!message
+
+#===== Base Simulator Options =====================================
+
+!IF "$(BASE_IPV6)"=="on"
+OPTS = $(OPTS) -DUSE_IPV6
+!ENDIF
+
+!IF "$(BASE_ISCDHCP)"=="on"
+OPTS = $(OPTS) -DUSE_ISCDHCP
+BASE_INCLUDES = $(BASE_INCLUDES) $(ISCDHCP_INCLUDE)
+BASE_SRCS = $(BASE_SRCS) $(ISCDHCP_SRCS)
+!ENDIF
+
+!IF "$(BASE_LIBPCAP)"=="on"
+OPTS = $(OPTS) -DUSE_LIBPCAP
+BASE_INCLUDES = $(BASE_INCLUDES) -I$(TOP_DIR)/simulator/libpcap/win
+BASE_SRCS = $(BASE_SRCS) $(LIBPCAP_SRCS)
+LIBS = $(LIBS) $(TOP_DIR)/$(OBJLIBS_DIR)/wpcap.lib
+!ENDIF
+
+!IF "$(BASE_PARALLELISM)"=="on"
+OPTS = $(OPTS) -DENABLE_PARALLELISM_FLAG
+!ENDIF
+
+#===== FUPM/HFPM Options =====================================
+
+!IF "$(FUPM)"=="on"
+OPTS = $(OPTS) -DFUPM
+INCLUDES = $(INCLUDES) -I$(TOP_DIR)/fupm/win$(DIGITS)/include
+LIBS = $(LIBS) $(TOP_DIR)/fupm/win$(DIGITS)/lib/InSite.lib
+!ENDIF
+
+!IF "$(HFPM)"=="on"
+OPTS = $(OPTS) -DHFPM
+INCLUDES = $(INCLUDES) -I$(TOP_DIR)/hfpm/win$(DIGITS)/include
+LIBS = $(LIBS) $(TOP_DIR)/hfpm/win$(DIGITS)/lib/InSite.lib
+!ENDIF
+
+#===== NRL OLSR Options =====================================
+
+NRLOLSR_OPTS = \
+    -DSCENSIM_NRLOLSR \
+    -DSIMULATE \
+    -DWIN32 \
+    -DNOMINMAX
+
+
+#===== Boost Options =====================================
+
+BOOST_OPTS = \
+    $(BOOST_OPTS) \
+    -DBOOST_DATE_TIME_NO_LIB \
+    -DBOOST_REGEX_NO_LIB \
+    -DBOOST_CHRONO_HEADER_ONLY \
+
+#===== Stdc Options =====================================
+
+STDC_OPTS = \
+    -D__STDC_CONSTANT_MACROS \
+    -D__STDC_LIMIT_MACROS \
+
+#===== CRT/SCL Options =====================================
+
+CRT_SCL_OPTS = \
+    -D_CRT_SECURE_NO_WARNINGS \
+    -D_SCL_SECURE_NO_WARNINGS \
+
+#===== Winsock Options =====================================
+
+WINSOCK_OPTS = \
+    -D_WINSOCK_DEPRECATED_NO_WARNINGS \
+
+#===== Options =====================================
+
+OPTS = \
+    /EHsc /W4 /wd4481 /wd4068 /wd4100 /wd4127 /wd4189 /wd4505 /wd4512 /wd4702 /nologo /bigobj \
+    $(OPTS) \
+    $(STDC_OPTS) \
+    $(BOOST_OPTS) \
+    $(CRT_SCL_OPTS) \
+    $(WINSOCK_OPTS) \
+    $(NRLOLSR_OPTS) \
+
+#===== Includes =====================================
+
+INCLUDES = \
+    $(INCLUDES) \
+    -I$(TOP_DIR) \
+    -I$(TOP_DIR)/include \
+    $(OUR_INCLUDES) \
+
+#===== LDLIBS =====================================
+
+LIBS = \
+    $(LIBS) \
+    ws2_32.lib gdi32.lib advapi32.lib crypt32.lib user32.lib iphlpapi.lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libeay32-mt-s-$(SSL_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/ssleay32-mt-s-$(SSL_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libscensim-vc$(VC_VER)-2_0_18768.lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libboost_filesystem-vc$(VC_VER)-mt-s-$(BOOST_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libboost_iostreams-vc$(VC_VER)-mt-s-$(BOOST_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libboost_system-vc$(VC_VER)-mt-s-$(BOOST_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libboost_thread-vc$(VC_VER)-mt-s-$(BOOST_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libboost_zlib-vc$(VC_VER)-mt-s-$(BOOST_VER).lib \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/shapelib.lib \
+
+!IF "$(PROGRAM)" == "trace_analyzer.exe"
+LIBS  =\
+    $(LIBS)  \
+    $(TOP_DIR)/$(OBJLIBS_DIR)/libscensim-vc$(VC_VER)-2_0_18768_md.lib
+!ENDIF
+
+
+#==============================================================================================
+
+SRCS = $(SRCS:/=\)
+INCLUDES = $(INCLUDES:/=\)
+OUR_INCLUDES = $(OUR_INCLUDES:/=\)
+LIBS = $(LIBS:/=\)
+
+CPPOBJS_OR_CSRCS = $(SRCS:.cpp=.obj)
+OBJS = $(CPPOBJS_OR_CSRCS:.c=.obj)
+
+.SUFFIXES:.deleteobj
+
+
+all: $(PROGRAM)
+
+$(PROGRAM): $(OBJS)
+    $(CXX) $(OPTS) $(OBJS) $(LIBS) /Fe$(PROGRAM)
+
+clean: $(OBJS:.obj=.deleteobj)
+    @del /f $(PROGRAM) $(PROGRAM:.exe=.lib) *.pdb *.ilk *.exp makefile.depend $(OTHER_CLEAN_FILES)
+
+!IF "$(BUILDTHREADS)"==""
+.cpp.obj:
+    $(CXX) -c $(OPTS) $(INCLUDES) $< /Fo$@
+
+.c.obj:
+    $(CXX) /TP -c $(OPTS) $(INCLUDES) $< /Fo$@
+
+!ELSE
+OPTS = \
+    $(OPTS) \
+    /MP$(BUILDTHREADS) /Gm-
+
+!INCLUDE $(TOP_DIR)/simulator/makefile.parallel.win
+
+!ENDIF
+
+.cpp.deleteobj:
+    @del $(<:.cpp=.obj) 2> nul
+
+.c.deleteobj:
+    @del $(<:.c=.obj) 2> nul
+
+# ===== makedepend settings =====
+
+DEPEND_FILE = makefile.depend
+
+depend:
+    copy nul $(DEPEND_FILE)
+    makedepend -Y -m -o.obj -f$(DEPEND_FILE) $(OUR_INCLUDES) -- $(OPTS) -- $(SRCS)
+
+!IF EXIST($(DEPEND_FILE))
+!INCLUDE $(DEPEND_FILE)
+!ENDIF

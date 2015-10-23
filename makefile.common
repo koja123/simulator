@@ -1,0 +1,257 @@
+BASE_DIR = $(TOP_DIR)/simulator
+
+BASE_INCLUDES = \
+    $(BASESIM_INCLUDE) \
+    $(BSDTCP_INCLUDE) \
+    $(NRLOLSR_INCLUDE) \
+    $(KERNELAODV_INCLUDE) \
+    $(NUOLSRV2_INCLUDE) \
+    $(ALOHA_INCLUDE) \
+    $(ITM_INCLUDE) \
+
+BASE_SRCS = \
+    $(BASESIM_SRCS) \
+    $(BSDTCP_SRCS) \
+    $(NRLOLSR_SRCS) \
+    $(KERNELAODV_SRCS) \
+    $(NUOLSRV2_SRCS) \
+    $(ALOHA_SRCS) \
+    $(ITM_SRCS) \
+
+#===== Base Simulator Include/Sources ================================================
+
+BASESIM_DIR = $(BASE_DIR)
+
+BASESIM_INCLUDE = -I$(BASESIM_DIR)
+
+BASESIM_SRCS = \
+    $(BASE_DIR)/sysstuff_$(ARCH_NAME).cpp \
+    $(BASE_DIR)/scenargiesim.cpp \
+    $(BASE_DIR)/scensim_stats.cpp \
+    $(BASE_DIR)/scensim_trace.cpp \
+    $(BASE_DIR)/scensim_netaddress.cpp \
+    $(BASE_DIR)/scensim_application.cpp \
+    $(BASE_DIR)/scensim_transport.cpp \
+    $(BASE_DIR)/scensim_network.cpp \
+    $(BASE_DIR)/scensim_mac.cpp \
+    $(BASE_DIR)/scensim_prop.cpp \
+    $(BASE_DIR)/scensim_proploss.cpp \
+    $(BASE_DIR)/scensim_mobility.cpp \
+    $(BASE_DIR)/scensim_gui_interface.cpp \
+    $(BASE_DIR)/scensim_gis.cpp \
+    $(BASE_DIR)/scensim_sensing.cpp \
+    $(BASE_DIR)/bsd9tcpglue.cpp \
+    $(BASE_DIR)/scensim_routing_support.cpp \
+
+#===== BSD TCP Include/Sources ================================================
+
+BSDTCP_DIR = $(BASE_DIR)/bsd9tcp
+
+BSDTCP_INCLUDE = -I$(BSDTCP_DIR)
+
+BSDTCP_SRCS = \
+    $(BSDTCP_DIR)/tcp_porting.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_hostcache.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_input.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_output.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_reass.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_sack.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_subr.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_syncache.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_timer.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_timewait.cpp \
+    $(BSDTCP_DIR)/netinet/bsd9_tcp_usrreq.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_cdg.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_chd.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_cubic.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_hd.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_htcp.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_newreno.cpp \
+    $(BSDTCP_DIR)/netinet/cc/bsd9_cc_vegas.cpp \
+    $(BSDTCP_DIR)/kern/bsd9_md5c.cpp \
+    $(BSDTCP_DIR)/netinet/khelp/bsd9_h_ertt.cpp \
+
+#===== NRL OLSR Include/Sources ======================================
+
+NRLOLSR_DIR = $(BASE_DIR)/routing/nrlolsr
+
+NRLOLSR_INCLUDE = -I$(NRLOLSR_DIR)/protolib/common -I$(NRLOLSR_DIR)/common
+
+NRLOLSR_SRCS = \
+    $(BASE_DIR)/nrlolsrglue.cpp \
+    $(BASE_DIR)/nrlprotolibglue.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoAddress.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoTimer.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoDebug.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoRouteMgr.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoRouteTable.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoTree.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoSimSocket.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoSimAgent.cpp \
+    $(NRLOLSR_DIR)/protolib/common/protoBitmask.cpp \
+    $(NRLOLSR_DIR)/common/nrlolsr.cpp \
+    $(NRLOLSR_DIR)/common/olsr_packet_types.cpp \
+    $(NRLOLSR_DIR)/common/nbr_queue.cpp \
+
+#===== AODV Include/Sources =====================================
+
+KERNELAODV_DIR = $(BASE_DIR)/routing/kernelaodv
+
+KERNELAODV_INCLUDE = -I$(KERNELAODV_DIR)
+
+KERNELAODV_SRCS = \
+    $(BASE_DIR)/kernelaodvglue.cpp \
+    $(KERNELAODV_DIR)/aodv_neigh.cpp \
+    $(KERNELAODV_DIR)/aodv_route.cpp \
+    $(KERNELAODV_DIR)/aodv_utils.cpp \
+    $(KERNELAODV_DIR)/flood_id.cpp \
+    $(KERNELAODV_DIR)/hello.cpp \
+    $(KERNELAODV_DIR)/packet_in.cpp \
+    $(KERNELAODV_DIR)/packet_out.cpp \
+    $(KERNELAODV_DIR)/task_queue.cpp \
+    $(KERNELAODV_DIR)/timer_queue.cpp \
+    $(KERNELAODV_DIR)/rreq.cpp \
+    $(KERNELAODV_DIR)/rrep.cpp \
+    $(KERNELAODV_DIR)/rerr.cpp \
+
+#===== nuOLSRv2 Include/Sources =====================================
+
+NUOLSRV2_DIR = $(BASE_DIR)/routing/nuOLSRv2
+
+NUOLSRV2_INCLUDE = -I$(NUOLSRV2_DIR) -I$(NUOLSRV2_DIR)/olsrv2
+
+NUOLSRV2_SRCS = \
+    $(BASE_DIR)/nuolsrv2glue.cpp \
+    $(NUOLSRV2_DIR)/core/config_parser.c \
+    $(NUOLSRV2_DIR)/core/event_list.c \
+    $(NUOLSRV2_DIR)/core/strbuf.c \
+    $(NUOLSRV2_DIR)/core/ibuf.c \
+    $(NUOLSRV2_DIR)/core/obuf.c \
+    $(NUOLSRV2_DIR)/core/ip_set.c \
+    $(NUOLSRV2_DIR)/core/ip_vector.c \
+    $(NUOLSRV2_DIR)/core/ip.c \
+    $(NUOLSRV2_DIR)/core/ip_heap.c \
+    $(NUOLSRV2_DIR)/core/logger.c \
+    $(NUOLSRV2_DIR)/core/mem.c \
+    $(NUOLSRV2_DIR)/core/pvector.c \
+    $(NUOLSRV2_DIR)/core/scheduler.c \
+    $(NUOLSRV2_DIR)/core/core.c \
+    $(NUOLSRV2_DIR)/packet/atb.c \
+    $(NUOLSRV2_DIR)/packet/atb_list.c \
+    $(NUOLSRV2_DIR)/packet/constant.c \
+    $(NUOLSRV2_DIR)/packet/msg.c \
+    $(NUOLSRV2_DIR)/packet/decoder.c \
+    $(NUOLSRV2_DIR)/packet/encoder.c \
+    $(NUOLSRV2_DIR)/packet/pkthdr.c \
+    $(NUOLSRV2_DIR)/packet/packet.c \
+    $(NUOLSRV2_DIR)/packet/tlv.c \
+    $(NUOLSRV2_DIR)/packet/tlv_set.c \
+    $(NUOLSRV2_DIR)/olsrv2/hello.c \
+    $(NUOLSRV2_DIR)/olsrv2/tc.c \
+    $(NUOLSRV2_DIR)/olsrv2/ip_attr.c \
+    $(NUOLSRV2_DIR)/olsrv2/flooding_mpr.c \
+    $(NUOLSRV2_DIR)/olsrv2/routing_mpr.c \
+    $(NUOLSRV2_DIR)/olsrv2/process.c \
+    $(NUOLSRV2_DIR)/olsrv2/stat.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_time.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_ip.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_al.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_an.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_ar.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_i.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_l.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_l2.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_lt.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_n.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_n2.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_proc.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_r.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_ta.c \
+    $(NUOLSRV2_DIR)/olsrv2/ibase_tr.c \
+    $(NUOLSRV2_DIR)/olsrv2/route.c \
+    $(NUOLSRV2_DIR)/olsrv2/etx.c \
+    $(NUOLSRV2_DIR)/olsrv2/metric_list.c \
+    $(NUOLSRV2_DIR)/olsrv2/olsrv2.c \
+
+#===== Aloha Include/Sources ================================================
+
+ALOHA_DIR = $(BASE_DIR)/aloha
+
+ALOHA_INCLUDE = -I$(ALOHA_DIR)
+
+ALOHA_SRCS = \
+    $(ALOHA_DIR)/aloha_mac.cpp \
+    $(ALOHA_DIR)/aloha_phy.cpp \
+
+#===== ITM Include/Sources ================================================
+
+ITM_DIR = $(BASE_DIR)/itm
+
+ITM_INCLUDE = -I$(ITM_DIR)
+
+ITM_SRCS = \
+    $(ITM_DIR)/itm.cpp \
+    $(ITM_DIR)/s_hull.cpp \
+
+#===== ISCDHCP Include/Sources ================================================
+
+ISCDHCP_DIR = $(BASE_DIR)/dhcp-4.2.4-P2
+
+ISCDHCP_INCLUDE = -I$(ISCDHCP_DIR) -I$(ISCDHCP_DIR)/includes
+
+ISCDHCP_SRCS = \
+    $(BASE_DIR)/iscdhcpglue.cpp \
+    $(ISCDHCP_DIR)/iscdhcp_porting.cpp \
+    $(ISCDHCP_DIR)/omapip/alloc.cpp \
+    $(ISCDHCP_DIR)/omapip/buffer.cpp \
+    $(ISCDHCP_DIR)/omapip/connection.cpp \
+    $(ISCDHCP_DIR)/omapip/convert.cpp \
+    $(ISCDHCP_DIR)/omapip/dispatch.cpp \
+    $(ISCDHCP_DIR)/omapip/errwarn.cpp \
+    $(ISCDHCP_DIR)/omapip/generic.cpp \
+    $(ISCDHCP_DIR)/omapip/handle.cpp \
+    $(ISCDHCP_DIR)/omapip/hash.cpp \
+    $(ISCDHCP_DIR)/omapip/support.cpp \
+    $(ISCDHCP_DIR)/omapip/toisc.cpp \
+    $(ISCDHCP_DIR)/common/alloc.cpp \
+    $(ISCDHCP_DIR)/common/comapi.cpp \
+    $(ISCDHCP_DIR)/common/conflex.cpp \
+    $(ISCDHCP_DIR)/common/discover.cpp \
+    $(ISCDHCP_DIR)/common/dispatch.cpp \
+    $(ISCDHCP_DIR)/common/execute.cpp \
+    $(ISCDHCP_DIR)/common/inet.cpp \
+    $(ISCDHCP_DIR)/common/memory.cpp \
+    $(ISCDHCP_DIR)/common/ns_name.cpp \
+    $(ISCDHCP_DIR)/common/options.cpp \
+    $(ISCDHCP_DIR)/common/parse.cpp \
+    $(ISCDHCP_DIR)/common/print.cpp \
+    $(ISCDHCP_DIR)/common/socket.cpp \
+    $(ISCDHCP_DIR)/common/tables.cpp \
+    $(ISCDHCP_DIR)/common/tree.cpp \
+    $(ISCDHCP_DIR)/client/dhclient.cpp \
+    $(ISCDHCP_DIR)/client/dhc6.cpp \
+    $(ISCDHCP_DIR)/client/clparse.cpp \
+    $(ISCDHCP_DIR)/isc/md5.cpp \
+    $(ISCDHCP_DIR)/isc/heap.cpp \
+    $(ISCDHCP_DIR)/server/bootp.cpp \
+    $(ISCDHCP_DIR)/server/class.cpp \
+    $(ISCDHCP_DIR)/server/confpars.cpp \
+    $(ISCDHCP_DIR)/server/db.cpp \
+    $(ISCDHCP_DIR)/server/ddns.cpp \
+    $(ISCDHCP_DIR)/server/dhcp.cpp \
+    $(ISCDHCP_DIR)/server/dhcpd.cpp \
+    $(ISCDHCP_DIR)/server/dhcpleasequery.cpp \
+    $(ISCDHCP_DIR)/server/dhcpv6.cpp \
+    $(ISCDHCP_DIR)/server/md6.cpp \
+    $(ISCDHCP_DIR)/server/mdb.cpp \
+    $(ISCDHCP_DIR)/server/omapi.cpp \
+    $(ISCDHCP_DIR)/server/salloc.cpp \
+    $(ISCDHCP_DIR)/server/stables.cpp \
+
+#===== LIBPCAP Include/Sources ================================================
+
+LIBPCAP_DIR = $(BASE_DIR)
+
+LIBPCAP_SRCS = \
+    $(LIBPCAP_DIR)/pcapglue.cpp \
+

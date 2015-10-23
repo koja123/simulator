@@ -1,0 +1,184 @@
+#===== Architecture Options =====================================
+
+BOOST_VER = 1_55
+GCCVERSION := $(shell g++ --version | grep ^g++ | cut -f3 -d' ' | cut -f1,2 -d.)
+SSL_VER=1_0_1m
+
+
+ifeq ($(shell uname),Darwin)
+    MACOSVERSION := $(shell sw_vers -productVersion | cut -f-2 -d.)
+    BIT_STRING=64
+    ARCH_FLAGS=
+    LIB_ARCH=macosx
+    GCC_VER=clang34
+    GCC_VER_OPTS=-std=c++11 -stdlib=libc++ -x c++ -Wno-deprecated-register -Wno-tautological-compare
+    OBJLIBS_DIR=$(TOP_DIR)/objlibs/macosx
+    UNAME=darwin
+    ifeq ($(MACOSVERSION),10.8)
+        GCC_LINK_OPTS=-lc++
+    else
+        GCC_LINK_OPTS=
+    endif
+else
+  GCC_VER=gcc48
+  GCC_VER_OPTS=--std=c++11 -Wno-deprecated-declarations
+  UNAME=linux
+  ifeq ($(shell getconf LONG_BIT),64)
+    BIT_STRING=64
+    ARCH_FLAGS=
+    LIB_ARCH=x86_64
+    OBJLIBS_DIR=$(TOP_DIR)/objlibs/linux64
+  else
+    BIT_STRING=
+    ARCH_FLAGS=-march=i686 -m32
+    LIB_ARCH=i686
+    OBJLIBS_DIR=$(TOP_DIR)/objlibs/linux
+  endif
+
+  GCC_LINK_OPTS=
+  LIBS += -lrt
+endif
+
+#===== Base Simulator Options =====================================
+
+ifneq (,$(findstring on,${BASE_IPV6}))
+    OPTS += -DUSE_IPV6
+else
+    OPTS += -DUSE_IPV4
+endif
+
+ifneq (,$(findstring on,${BASE_ISCDHCP}))
+    OPTS += -DUSE_ISCDHCP
+    BASE_INCLUDES += $(ISCDHCP_INCLUDE)
+    BASE_SRCS += $(ISCDHCP_SRCS)
+endif
+
+ifneq (,$(findstring on,${BASE_LIBPCAP}))
+    OPTS += -DUSE_LIBPCAP
+    BASE_INCLUDES += -I$(TOP_DIR)/simulator/libpcap/linux
+    BASE_SRCS += $(LIBPCAP_SRCS)
+    LIBS += $(OBJLIBS_DIR)/libpcap.a
+endif
+
+ifneq (,$(findstring on,${BASE_PARALLELISM}))
+    OPTS += -DENABLE_PARALLELISM_FLAG
+endif
+
+#===== FUPM/HFPM Options =====================================
+
+ifneq (,$(findstring on,${FUPM}))
+    OPTS +=-DFUPM
+    INCLUDES += -I$(TOP_DIR)/fupm/linux${BIT_STRING}/include
+    ifeq (,$(filter %linsite,$(LIBS)))
+        LIBS +=-linsite
+    endif
+endif
+
+ifneq (,$(findstring on,${HFPM}))
+    OPTS +=-DHFPM
+    INCLUDES += -I$(TOP_DIR)/hfpm/linux${BIT_STRING}/include
+    ifeq (,$(filter %linsite,$(LIBS)))
+        LIBS +=-linsite
+    endif
+endif
+
+#===== NRL OLSR Options =====================================
+
+NRLOLSR_OPTS = \
+	-DSCENSIM_NRLOLSR \
+	-DSIMULATE \
+	-DUNIX \
+	-DPROTO_DEBUG \
+	-DHAVE_ASSERT \
+	-DHAVE_DIRFD \
+	-D_FILE_OFFSET_BITS=64
+
+
+
+
+#===== Boost Options =====================================
+
+BOOST_OPTS = \
+	-DBOOST_DATE_TIME_NO_LIB \
+	-DBOOST_REGEX_NO_LIB \
+
+#===== Stdc Options =====================================
+
+STDC_OPTS = \
+	-D__STDC_CONSTANT_MACROS \
+	-D__STDC_LIMIT_MACROS \
+
+#===== Options =====================================
+
+OPTS += \
+	$(GCC_VER_OPTS) \
+	$(ARCH_FLAGS) \
+	$(STDC_OPTS) \
+	$(BOOST_OPTS) \
+	$(NRLOLSR_OPTS)
+
+#===== Includes =====================================
+
+INCLUDES += \
+	-I$(TOP_DIR) \
+	-I$(TOP_DIR)/include \
+	$(OUR_INCLUDES)
+
+#===== LIBS =====================================
+
+FPIC_OPT=
+ifneq (,$(findstring fPIC, ${OPTS}))
+    FPIC_OPT=-fpic
+endif 
+
+LIBS +=\
+	-lpthread -ldl \
+	$(OBJLIBS_DIR)/libscensim-$(LIB_ARCH)-$(GCC_VER)-mt-2_0_18768.a \
+	$(OBJLIBS_DIR)/libboost_filesystem-$(LIB_ARCH)-$(GCC_VER)-mt-s-$(BOOST_VER).a \
+	$(OBJLIBS_DIR)/libboost_iostreams-$(LIB_ARCH)-$(GCC_VER)-mt-s-$(BOOST_VER)$(FPIC_OPT).a \
+	$(OBJLIBS_DIR)/libboost_system-$(LIB_ARCH)-$(GCC_VER)-mt-s-$(BOOST_VER)$(FPIC_OPT).a \
+	$(OBJLIBS_DIR)/libboost_thread-$(LIB_ARCH)-$(GCC_VER)-mt-s-$(BOOST_VER)$(FPIC_OPT).a \
+	$(OBJLIBS_DIR)/libboost_zlib-$(LIB_ARCH)-$(GCC_VER)-mt-s-$(BOOST_VER)$(FPIC_OPT).a \
+	$(OBJLIBS_DIR)/shapelib.a \
+	$(OBJLIBS_DIR)/libssl-$(SSL_VER).a \
+	$(OBJLIBS_DIR)/libcrypto-$(SSL_VER).a \
+
+#==============================================================================================
+
+CPPOBJS_OR_CSRCS = $(SRCS:.cpp=.o)
+OBJS = $(CPPOBJS_OR_CSRCS:.c=.o)
+
+.SUFFIXES:.deleteobj
+
+
+all: $(PROGRAM)
+
+$(PROGRAM): $(OBJS)
+	$(CXX) $(OBJS) $(GCC_LINK_OPTS) $(LIBS) -o $(PROGRAM)
+
+clean: $(OBJS:.o=.deleteobj)
+	rm -f $(PROGRAM) makefile.depend $(OTHER_CLEAN_FILES)
+
+.cpp.o:
+	$(CXX) -c $(OPTS) $(INCLUDES) $< -o $@
+
+.c.o:
+	$(CXX) -c $(OPTS) $(INCLUDES) $< -o $@
+
+.cpp.deleteobj:
+	rm -f $(<:.cpp=.o)
+
+.c.deleteobj:
+	rm -f $(<:.c=.o)
+
+# ===== makedepend settings =====
+
+DEPEND_FILE = makefile.depend
+
+depend:
+	touch $(DEPEND_FILE)
+	makedepend -Y -m -f$(DEPEND_FILE) $(OUR_INCLUDES) -- $(OPTS) -- $(SRCS)
+
+ifeq ($(wildcard $(DEPEND_FILE)), $(DEPEND_FILE))
+include $(DEPEND_FILE)
+endif
